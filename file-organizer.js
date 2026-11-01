@@ -1,7 +1,11 @@
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import process from "node:process";
-import { runStartCommand, runScanCommand } from "./commands/index.js";
+import {
+  runStartCommand,
+  runScanCommand,
+  runDuplicatesCommand,
+} from "./commands/index.js";
 
 yargs(hideBin(process.argv))
   .command(
@@ -23,6 +27,19 @@ yargs(hideBin(process.argv))
     },
     async (argv) => {
       await runScanCommand(argv.directory);
+    },
+  )
+  .command(
+    "duplicates <directory>",
+    "Check a directory for duplicates and calculate wasted space.",
+    (yargs) => {
+      return yargs.positional("directory", {
+        describe: "Path to the directory to check for duplicates",
+        type: "string",
+      });
+    },
+    async (argv) => {
+      await runDuplicatesCommand(argv.directory);
     },
   )
   .help()

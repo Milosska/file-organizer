@@ -1,5 +1,5 @@
 import { select, input } from "@inquirer/prompts";
-import { runScanCommand } from "./scan.js";
+import { runScanCommand, runDuplicatesCommand } from "./index.js";
 
 export async function runStartCommand() {
   const command = await select({
@@ -9,14 +9,27 @@ export async function runStartCommand() {
         name: "Scan a directory",
         value: "scan",
       },
+      {
+        name: "Check a directory for duplicates",
+        value: "duplicates",
+      },
     ],
   });
 
-  if (command === "scan") {
-    const directory = await input({
+  let directory;
+  if (command === "scan" || command === "duplicates") {
+    directory = await input({
       message: "Enter the directory path (as a string with quotation marks):",
     });
+  }
 
-    await runScanCommand(directory);
+  switch (command) {
+    case "scan":
+      await runScanCommand(directory);
+      break;
+
+    case "duplicates":
+      await runDuplicatesCommand(directory);
+      break;
   }
 }

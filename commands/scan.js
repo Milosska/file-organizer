@@ -32,7 +32,7 @@ export async function runScanCommand(directory) {
       console.log(`\n\n 📊 Scan Results: \n ${"━".repeat(60)} ${statistics}`);
     });
 
-    scanner.scan();
+    await scanner.scan();
   } catch (error) {
     console.error(`❌ Error: ${error.message}`);
     process.exit(1);

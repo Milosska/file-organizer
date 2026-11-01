@@ -6,7 +6,8 @@
   "main": "file-organizer.js",
   "scripts": {
     "start": "node file-organizer.js start",
-    "scan": "node file-organizer.js scan"
+    "scan": "node file-organizer.js scan",
+    "duplicates": "node file-organizer.js duplicates"
   },
   "keywords": [
     "cli",
