@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node file-organizer.js start",
     "scan": "node file-organizer.js scan",
-    "duplicates": "node file-organizer.js duplicates"
+    "duplicates": "node file-organizer.js duplicates",
+    "organize": "node file-organizer.js organize"
   },
   "keywords": [
     "cli",
