@@ -1,5 +1,5 @@
 import { Duplicates } from "../lib/duplicates.js";
-import { drawProgressBar } from "../lib/utils/utils.js";
+import { drawProgressBar } from "../lib/utils.js";
 
 export async function runDuplicatesCommand(directory) {
   try {

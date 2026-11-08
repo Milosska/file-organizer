@@ -1,5 +1,5 @@
 import { Scanner } from "../lib/scanner.js";
-import { drawProgressBar } from "../lib/utils/utils.js";
+import { drawProgressBar } from "../lib/utils.js";
 
 export async function runScanCommand(directory) {
   try {

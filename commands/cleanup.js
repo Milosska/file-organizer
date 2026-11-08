@@ -1,5 +1,5 @@
 import { Cleanup } from "../lib/cleanup.js";
-import { drawProgressBar } from "../lib/utils/utils.js";
+import { drawProgressBar } from "../lib/utils.js";
 
 export async function runCleanupCommand(directory, olderThan, confirm) {
   try {
