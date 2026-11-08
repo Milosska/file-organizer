@@ -6,6 +6,7 @@ import {
   runScanCommand,
   runDuplicatesCommand,
   runOrganizeCommand,
+  runCleanupCommand,
 } from "./commands/index.js";
 
 yargs(hideBin(process.argv))
@@ -60,6 +61,37 @@ yargs(hideBin(process.argv))
     },
     async (argv) => {
       await runOrganizeCommand(argv.directory, argv.output);
+    },
+  )
+  .command(
+    "cleanup <directory>",
+    "List and remove files older than indicated period in days.",
+    (yargs) => {
+      return yargs
+        .positional("directory", {
+          describe: "Path to the directory to scan",
+          type: "string",
+        })
+        .option("older-than", {
+          demandOption: true,
+          describe: "Check period in days",
+          type: "number",
+          requiresArg: true,
+          coerce: (value) => {
+            if (!Number.isFinite(value) || value <= 0) {
+              throw new Error("--older-than must be a positive number");
+            }
+            return value;
+          },
+        })
+        .option("confirm", {
+          default: false,
+          describe: "Confirm deletion of matching files",
+          type: "boolean",
+        });
+    },
+    async (argv) => {
+      await runCleanupCommand(argv.directory, argv.olderThan, argv.confirm);
     },
   )
   .help()

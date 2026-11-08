@@ -8,7 +8,8 @@
     "start": "node file-organizer.js start",
     "scan": "node file-organizer.js scan",
     "duplicates": "node file-organizer.js duplicates",
-    "organize": "node file-organizer.js organize"
+    "organize": "node file-organizer.js organize",
+    "cleanup": "node file-organizer.js cleanup"
   },
   "keywords": [
     "cli",

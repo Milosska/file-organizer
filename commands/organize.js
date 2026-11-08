@@ -1,5 +1,5 @@
 import { Organizer } from "../lib/organizer.js";
-import { showReadableFileSize, renderProgress } from "../lib/utils/utils.js";
+import { renderProgress } from "../lib/utils/utils.js";
 
 export async function runOrganizeCommand(directory, output) {
   try {
