@@ -1,14 +1,6 @@
 # File Organizer
 
-## Overview
-
-File Organizer is a command-line tool that recursively scans a directory and reports statistics about its files.
-
-## Features
-
-- Scan a directory and its subdirectories with a live progress indicator.
-- Summarize file counts and sizes by file extension.
-- Group files by age and report the three largest files and the oldest file(s).
+File Organizer is a command-line tool for analyzing directories, finding duplicate files, sorting copies of files into categories, and identifying or deleting files older than a chosen age.
 
 ## Requirements
 
@@ -24,102 +16,98 @@ npm install
 
 ## Usage
 
-The CLI provides two commands, `start` and `scan`, plus Yargs help. You can run them through the npm scripts or invoke the entry point directly with Node.js.
-
-### Interactive Mode (`start`)
-
-Start the interactive menu and choose **Scan a directory**:
+Start the interactive menu with one of the commands below:
 
 ```bash
 npm start
-```
-
-The menu currently offers one action: **Scan a directory**. Select it, then enter the directory path when prompted. For example:
-
-```text
-What would you like to do?  Scan a directory
-Enter the directory path:   "C:\Users\YourName\Documents"
-```
-
-The path is the only input required in interactive mode. You can enter an absolute path or a path relative to the directory where you started the command.
-
-Equivalent direct invocation:
-
-```bash
 node file-organizer.js start
 ```
 
-### Scan Command (`scan <directory>`)
+Choose an operation and enter the requested directory paths. The menu provides scanning, duplicate detection, file organization, and cleanup.
 
-Run a scan without opening the interactive menu:
+You can also run each operation directly. Quote paths that contain spaces. With npm scripts, put `--` before the command arguments:
 
-```bash
-npm run scan "path/to/directory"
-```
+### Scan a directory
 
-The required `<directory>` argument is the path to the directory to scan. Quote paths that contain spaces. Examples:
+Recursively reports file and folder counts, totals by file extension, file-age groups, the three largest files, and the oldest file(s).
 
 ```bash
-# Relative path (resolved from the current working directory)
-npm run scan "./documents"
-
-# Absolute path on Windows
-npm run scan "C:\Users\YourName\My Documents"
-
-# Absolute path on macOS or Linux
-npm run scan "/home/yourname/Documents"
-```
-
-The command recursively visits subdirectories. It displays progress and per-file details, then reports file and folder counts, totals by file extension, file-age groups, the three largest files, and the oldest file(s).
-
-Equivalent direct invocation:
-
-```bash
+npm run scan -- "path/to/directory"
 node file-organizer.js scan "path/to/directory"
 ```
 
-The directory argument is required. If it is omitted, the CLI reports that no directory was specified. The CLI also supports help:
+### Find duplicate files
+
+Compares file contents using SHA-256 hashes and reports duplicate groups and their sizes.
 
 ```bash
-node file-organizer.js --help
-node file-organizer.js scan --help
+npm run duplicates -- "path/to/directory"
+node file-organizer.js duplicates "path/to/directory"
 ```
 
-## Technologies
+### Organize files
 
-- Node.js
-- JavaScript (ES modules)
-- [Yargs](https://yargs.js.org/) for command-line parsing
-- [Inquirer](https://github.com/SBoudrias/Inquirer.js) prompts for the interactive menu
+Copies files from the source directory into category folders under the required output directory. Existing files are not overwritten; a numbered suffix is added to name conflicts. Categories are Documents, Images, Archives, Code, Videos, Music, and Other.
+
+```bash
+npm run organize -- "path/to/source" --output "path/to/output"
+node file-organizer.js organize "path/to/source" --output "path/to/output"
+```
+
+### Clean up old files
+
+Lists files whose last-modified time is more than the specified number of days old. By default, cleanup is a dry run and does not delete anything. Add `--confirm` to permanently delete the listed files.
+
+```bash
+# Preview files older than 365 days
+npm run cleanup -- "path/to/directory" --older-than 365
+node file-organizer.js cleanup "path/to/directory" --older-than 365
+
+# Delete files older than 365 days
+npm run cleanup -- "path/to/directory" --older-than 365 --confirm
+node file-organizer.js cleanup "path/to/directory" --older-than 365 --confirm
+```
+
+Use `--help` to see CLI commands and options:
+
+```bash
+npm run help
+node file-organizer.js --help
+node file-organizer.js cleanup --help
+```
+
+Paths may be absolute or relative to the directory where the command is run.
 
 ## Project Structure
 
 ```text
 file-organizer/
-├── commands/                  # Command handlers called by the CLI
-│   ├── index.js               # Re-exports the start and scan handlers
-│   ├── start.js               # Interactive menu and directory prompt
-│   └── scan.js                # Runs a scan and prints progress and results
-├── lib/                       # Scanning logic and shared utilities
-│   ├── scanner.js             # Recursively scans directories and aggregates statistics
-│   └── utils/
-│       ├── scan-utils.js      # Utils for scanner class: formats sizes and dates; provides scan display delay
-│       └── utils.js           # Global utils: Resolves paths, draws progress, handles read errors
-├── file-organizer.js          # Yargs CLI entry point and command definitions
+├── commands/                  # CLI command handlers and interactive menu
+│   ├── index.js               # Exports command handlers
+│   ├── start.js               # Interactive menu
+│   ├── scan.js                # Directory scan output
+│   ├── duplicates.js          # Duplicate search output
+│   ├── organize.js            # File organization output
+│   └── cleanup.js             # Cleanup output
+├── lib/                       # Scanning, organization, and cleanup logic
+│   ├── scanner.js             # Directory statistics
+│   ├── duplicates.js          # SHA-256 duplicate detection
+│   ├── organizer.js           # Categorizes and copies files
+│   ├── cleanup.js             # Finds and optionally removes old files
+│   └── utils.js               # Shared path, traversal, and display utilities
+├── file-organizer.js          # CLI entry point and command definitions
 ├── package.json               # Project metadata, dependencies, and npm scripts
-├── package-lock.json          # Locked dependency versions for reproducible installs
-├── .gitignore                 # Excludes installed node_modules from Git
-└── README.md                  # Project documentation
+├── package-lock.json          # Locked dependency versions
+├── .gitignore                 # Ignores installed dependencies
+└── README.md
 ```
 
-## How It Works
+## Technologies
 
-The CLI dispatches `start` and `scan` commands to handlers in `commands/`. The `Scanner` in `lib/scanner.js` walks the directory tree, gathers file metadata, and emits events used by the scan handler to display progress and results. Utility modules format file information and handle paths and directory errors.
-
-## Error Handling
-
-The CLI reports missing scan paths, unknown commands, directories that cannot be found, and permission or read errors. It exits with a non-zero status when a command or scan fails.
+- Node.js with JavaScript ES modules
+- [Yargs](https://yargs.js.org/) for command-line parsing
+- [Inquirer](https://github.com/SBoudrias/Inquirer.js) for interactive prompts
 
 ## License
 
-ISC. See the `license` field in `package.json`.
+ISC. See the `license` field in [package.json](./package.json).

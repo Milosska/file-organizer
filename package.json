@@ -9,7 +9,8 @@
     "scan": "node file-organizer.js scan",
     "duplicates": "node file-organizer.js duplicates",
     "organize": "node file-organizer.js organize",
-    "cleanup": "node file-organizer.js cleanup"
+    "cleanup": "node file-organizer.js cleanup",
+    "help": "node file-organizer.js --help"
   },
   "keywords": [
     "cli",
