@@ -77,12 +77,6 @@ yargs(hideBin(process.argv))
           describe: "Check period in days",
           type: "number",
           requiresArg: true,
-          coerce: (value) => {
-            if (!Number.isFinite(value) || value <= 0) {
-              throw new Error("--older-than must be a positive number");
-            }
-            return value;
-          },
         })
         .option("confirm", {
           default: false,

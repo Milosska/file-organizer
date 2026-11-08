@@ -69,7 +69,7 @@ export async function runStartCommand() {
         ],
       });
 
-      await runCleanupCommand(directory, Number(olderThan), isDryRun);
+      await runCleanupCommand(directory, olderThan, isDryRun);
       break;
   }
 }
