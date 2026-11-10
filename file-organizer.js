@@ -23,6 +23,7 @@ yargs(hideBin(process.argv))
     "Scan a directory and gather statistics about its contents.",
     (yargs) => {
       return yargs.positional("directory", {
+        demandOption: true,
         describe: "Path to the directory to scan",
         type: "string",
       });
@@ -36,6 +37,7 @@ yargs(hideBin(process.argv))
     "Check a directory for duplicates and calculate wasted space.",
     (yargs) => {
       return yargs.positional("directory", {
+        demandOption: true,
         describe: "Path to the directory to check for duplicates",
         type: "string",
       });
@@ -50,6 +52,7 @@ yargs(hideBin(process.argv))
     (yargs) => {
       return yargs
         .positional("directory", {
+          demandOption: true,
           describe: "Path to the directory to scan",
           type: "string",
         })
@@ -69,6 +72,7 @@ yargs(hideBin(process.argv))
     (yargs) => {
       return yargs
         .positional("directory", {
+          demandOption: true,
           describe: "Path to the directory to scan",
           type: "string",
         })
@@ -87,6 +91,10 @@ yargs(hideBin(process.argv))
     async (argv) => {
       await runCleanupCommand(argv.directory, argv.olderThan, argv.confirm);
     },
+  )
+  .demandCommand(
+    1,
+    "Please, specify at least one command. Use --help to get more information.",
   )
   .help()
   .strict()
